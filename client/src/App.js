@@ -18,12 +18,12 @@ state = { cost: 0, itemName: "exmapleItem1", loaded: false};
       // Get the contract instance.
       const networkId = await this.web3.eth.net.getId();
       
-      this.ItemManager = new this.web3.eth.contract(
+      this.ItemManager = new this.web3.eth.Contract(
         ItemManager.abi,
         ItemManager.networks[networkId] && ItemManager.networks[networkId].address,
       );
 
-      this.Item = new this.web3.eth.contract(
+      this.Item = new this.web3.eth.Contract(
         Item.abi,
         Item.networks[networkId] && Item.networks[networkId].address,
       );
@@ -54,6 +54,21 @@ state = { cost: 0, itemName: "exmapleItem1", loaded: false};
     this.setState({ storageValue: response });
   };
 
+  handleSubmit = async () => {
+    const {cost, itemName} = this.state;
+    console.log(itemName, cost, this.ItemManager);
+    let result = await this.ItemManager.methods.createItem(itemName, cost).send({from: this.accounts[0]});
+    console.log(result);
+    alert("Send " + cost + " Wei to " + result.events.SupplyChainStep.returnVaules._address);
+  };
+
+  handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({[name] : value});
+  }
   render() {
     if (!this.state.loaded) {
       return <div>Loading Web3, accounts, and contract...</div>;
@@ -64,7 +79,7 @@ state = { cost: 0, itemName: "exmapleItem1", loaded: false};
         <h2>Items</h2>
 
         <h2>Add Element</h2>
-        Cost: <input type="text" name="ItemName" value={this.state.itemName} onchange={this.handleInputChange} />
+        Cost: <input type="text" name="ItemName" value={this.state.itemName} onChange={this.handleInputChange} />
         <button type ="button" onClick={this.handleSubmit}>Create New Item</button>
         </div>
     );
