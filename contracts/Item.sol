@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "./ItemManager.sol";
@@ -9,7 +10,7 @@ contract Item {
 
     ItemManager parentContract;
 
-    constructor(ItemManager _parentContract, uint _priceInWei, uint _index) public {
+    constructor(ItemManager _parentContract, uint _priceInWei, uint _index) {
         priceInWei = _priceInWei;
         index = _index;
         parentContract = _parentContract;
